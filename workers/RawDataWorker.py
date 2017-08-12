@@ -2,6 +2,7 @@ from repositories.Repository import Repository
 from workers.Scraper import Scraper
 from workers.StopWatch import StopWatch
 import re as regex
+import json
 
 class RawDataWorker:
 
@@ -53,10 +54,19 @@ class RawDataWorker:
             data += self.scraper.extract_reviews(attraction, url, traveller_type)
 
         if(len(data) != 0):
-            self.repo.write_raw_reviews(data)
-            print(str(len(data)) + " data is being imported to mongodb db 'raw_reviews'.")
+            if attraction == "Singapore Zoo":
+                self.repo.write_raw_reviews_singapore_zoo(data)
+            elif attraction == "River Safari":
+                self.repo.write_raw_reviews_river_safari(data)
+            elif attraction == "Night Safari":
+                self.repo.write_raw_reviews_night_safari(data)
+
+            print(str(len(data)) + " data is being imported to mongodb db '" + attraction + "'.")
         else:
+            with open('debug.json', 'w') as file:
+                json.dump(data, file, sort_keys=True, indent=4)
             print("No data is being imported. There might be error during the web scraping.")
+            print("Please refer to debug.json for the partial captured data.")
             
     def __write_raw_users(self):
 
