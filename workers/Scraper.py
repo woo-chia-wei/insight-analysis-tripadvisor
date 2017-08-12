@@ -2,8 +2,6 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from time import sleep
 import requests
-import pprint as pp
-import re as regex
 
 class Scraper:
 
