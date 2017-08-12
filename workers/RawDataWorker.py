@@ -72,7 +72,10 @@ class RawDataWorker:
 
         def read_user_id_from_raw_reviews():
             repo = Repository()
-            records = repo.read_raw_reviews({ 'uid': { '$ne': ''} }, {"uid": 1})
+            records = []
+            records += repo.read_raw_reviews_singapore_zoo({ 'uid': { '$ne': ''} }, {"uid": 1})
+            records += repo.read_raw_reviews_river_safari({ 'uid': { '$ne': ''} }, {"uid": 1})
+            records += repo.read_raw_reviews_night_safari({ 'uid': { '$ne': ''} }, {"uid": 1})
             uids = [ regex.compile('UID_(.*)-SRC').search(data['uid']).group(1) for data in records]
             uids_set = set(uids)
             return list(uids_set)
@@ -88,9 +91,6 @@ class RawDataWorker:
             print(str(len(data)) + " data is being imported to mongodb db 'raw_users'.")
         else:
             print("No data is being imported. There might be error during the web scraping.")
-
-    def extract_raw_reviews_all_attractions(self):
-        self.__monitor_action(self.__write_raw_reviews, "Write Raw Reviews")
 
     def extract_raw_users_all_attractions(self):
         self.__monitor_action(self.__write_raw_users, "Write Raw Users")
