@@ -7,6 +7,9 @@ import json
 from TripAdvisorReview import *
 from TripAdvisorProfile import *
 from ReviewAnalysis import *
+
+from RawDataWorker import RawDataWorker
+
 #------------------------------------------#
 # Attraction Overview
 #------------------------------------------#
@@ -64,27 +67,27 @@ print("-"*50+"\nReview Details\n"+"-"*50)
 print("Check file: "+file_output+"\n")
 #
 #------------------------------------------#
-# Review Analysis
-#------------------------------------------#
-rpt1 = "Analysis_1_review_rating_number_yearly.csv"
-review_rating_by_year(file_output,rpt1)
-print("-" * 50 + "\nReview Analysis\n" + "-" * 50)
-print("Check file: " + rpt1 + "\n")
-#------------------------------------------#
 # User Profile
 #------------------------------------------#
-total = len(uid_s)
-file_output2 = "Tripadvisor_singapore_zoo_user_profile.json"
-f=open(file_output2,"w")
-f.close()
-f=open(file_output2,'a')
-for i,uid in enumerate(uid_s):
-    if i%20 == 0:
-        print("%s, processing %d / %d" % (str(datetime.datetime.now()),i,total))
-    if uid:
-        #print(uid)
-        user_profile_url = get_user_profile_url(uid)
-        f.write(extract_profile(get_soup(user_profile_url)) + "\n")
-print("-" * 50 + "\nUser Profile\n" + "-" * 50)
-print("Check file: " + file_output2 + "\n")
+worker = RawDataWorker()
+# worker.write_raw_users(urls)
+
+
+
+
+
+# total = len(uid_s)
+# file_output2 = "Tripadvisor_singapore_zoo_user_profile.json"
+# f=open(file_output2,"w")
+# f.close()
+# f=open(file_output2,'a')
+# for i,uid in enumerate(uid_s):
+#     if i%20 == 0:
+#         print("%s, processing %d / %d" % (str(datetime.datetime.now()),i,total))
+#     if uid:
+#         #print(uid)
+#         user_profile_url = get_user_profile_url(uid)
+#         f.write(extract_profile(get_soup(user_profile_url)) + "\n")
+# print("-" * 50 + "\nUser Profile\n" + "-" * 50)
+# print("Check file: " + file_output2 + "\n")
 # End.
