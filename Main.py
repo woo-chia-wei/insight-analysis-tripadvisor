@@ -84,7 +84,7 @@ for i,uid in enumerate(uid_s):
     if uid:
         #print(uid)
         user_profile_url = get_user_profile_url(uid)
-        f.write(create_profile_json(get_soup(user_profile_url)) + "\n")
+        f.write(extract_profile(get_soup(user_profile_url)) + "\n")
 print("-" * 50 + "\nUser Profile\n" + "-" * 50)
 print("Check file: " + file_output2 + "\n")
 # End.
