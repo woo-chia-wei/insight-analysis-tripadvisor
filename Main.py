@@ -5,20 +5,11 @@ import pandas as pd
 import datetime
 import json
 from TripAdvisorReview import *
-from TripAdvisorProfile import *
-from ReviewAnalysis import *
-
 from RawDataWorker import RawDataWorker
 
-#------------------------------------------#
-# Attraction Overview
-#------------------------------------------#
 url = "https://www.tripadvisor.com.sg/Attraction_Review-g294265-d324542-Reviews-Singapore_Zoo-Singapore.html"
-attraction = AttOverview(*(parse_attraction_overview(url)))
-print("-"*50+"\nAttraction Overview\n"+"-"*50)
-print(attraction.print_overview())
-with open("Tripadvisor_singapore_zoo_review_overview.json","w") as f:
-    f.write(json.dumps(attraction.__dict__,indent=4))
+
+
 #------------------------------------------#
 # Review Details
 #------------------------------------------#
