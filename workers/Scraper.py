@@ -78,8 +78,18 @@ class Scraper:
                 last_page = driver.find_elements_by_css_selector(".pageNum.last")[0].get_attribute("data-page-number")
                 print("Working on '" + attraction + " 'with '" + traveller_type + "' type at page " + current_page + " out of " + last_page + "...")
 
-                for review in reviews:
+                # Click on more links to expand the review description
+                while True:
+                    more_links = driver.find_elements_by_css_selector('div.review-container .partial_entry span.taLnk.ulBlueLinks')
+                    if len(more_links) == 0: break
+                    for link in more_links:
+                        sleep(0.3)
+                        try:
+                            link.click()
+                        except:
+                            pass
 
+                for review in reviews:
                     selector_uid = review.find_elements_by_css_selector('div.memberOverlayLink')
                     selector_review_id = review
                     selector_user_name = review.find_element_by_css_selector('div.username.mo')

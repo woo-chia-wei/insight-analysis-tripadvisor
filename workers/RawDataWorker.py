@@ -40,6 +40,8 @@ class RawDataWorker:
             "Friends"
         ]
 
+        traveller_types = ["Solo"]
+
         if attraction == "Singapore Zoo":
             url = "https://www.tripadvisor.com.sg/Attraction_Review-g294265-d324542-Reviews-Singapore_Zoo-Singapore.html"
         elif attraction == "River Safari":
