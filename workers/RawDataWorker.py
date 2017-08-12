@@ -46,6 +46,9 @@ class RawDataWorker:
 
         for attraction in attractions:
             for traveller_type in traveller_types:
+                # if(traveller_type != "Business"): continue
+                if(attraction['name'] != 'Night Safari'): continue
+
                 data += self.scraper.extract_reviews(attraction['name'], attraction['url'], traveller_type)
 
         if(len(data) != 0):

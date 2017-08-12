@@ -1,32 +1,32 @@
-# from workers.RawDataWorker import RawDataWorker
-# from repositories.Repository import Repository
-# import pprint as pp
+# # from workers.RawDataWorker import RawDataWorker
+# # from repositories.Repository import Repository
+# # import pprint as pp
 
 
-# # links = [
-# #     "https://www.tripadvisor.com.sg/members/WendyK225",
-# #     "https://www.tripadvisor.com.sg/members/192manun",
-# #     "https://www.tripadvisor.com.sg/members/neila953"
-# # ]
+# # # links = [
+# # #     "https://www.tripadvisor.com.sg/members/WendyK225",
+# # #     "https://www.tripadvisor.com.sg/members/192manun",
+# # #     "https://www.tripadvisor.com.sg/members/neila953"
+# # # ]
 
+# # # worker = RawDataWorker()
+# # # worker.write_raw_users(links)
+
+# # # repo = Repository()
+# # # pp.pprint(repo.read_raw_users())
+
+# # urls = ["https://www.tripadvisor.com.sg/Attraction_Review-g294265-d324542-Reviews-Singapore_Zoo-Singapore.html"]
 # # worker = RawDataWorker()
-# # worker.write_raw_users(links)
+# # worker.write_raw_reviews(urls)
 
 # # repo = Repository()
-# # pp.pprint(repo.read_raw_users())
+# # pp.pprint(repo.read_raw_reviews())
 
-# urls = ["https://www.tripadvisor.com.sg/Attraction_Review-g294265-d324542-Reviews-Singapore_Zoo-Singapore.html"]
-# worker = RawDataWorker()
-# worker.write_raw_reviews(urls)
+# from workers.StopWatch import StopWatch
+# from time import sleep
 
-# repo = Repository()
-# pp.pprint(repo.read_raw_reviews())
+# sw = StopWatch()
+# sw.start()
+# sleep(5)
 
-from workers.StopWatch import StopWatch
-from time import sleep
-
-sw = StopWatch()
-sw.start()
-sleep(5)
-
-print(sw.stop())
+# print(sw.stop())

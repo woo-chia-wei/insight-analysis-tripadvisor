@@ -64,42 +64,55 @@ class Scraper:
         try:
             driver = webdriver.Chrome("drivers/chromedriver.exe")
             driver.get(url)
+            print("Opening url " + url)
 
             # Reopen page and check traveller type filter
             driver.find_element_by_css_selector('#taplc_location_review_filter_controls_0_filterSegment_' + traveller_type).click()
-            sleep(1)
+            sleep(3)
             
             # Start extracting
-            reviews = driver.find_elements_by_css_selector('div.review-container')
-            for review in reviews:
 
-                selector_uid = review.find_elements_by_css_selector('div.memberOverlayLink')
-                selector_review_id = review
-                selector_user_name = review.find_element_by_css_selector('div.username.mo')
-
-                uid = selector_uid[0].get_attribute("id").strip() if selector_uid else ""
-                review_id = selector_review_id.get_attribute("data-reviewid")
-                user_name = selector_user_name.text.strip() if selector_user_name else ""
-                rating = get_rating(review.find_element_by_css_selector('.rating span').get_attribute('class'))
-                review_date = review.find_element_by_css_selector('span.ratingDate.relativeDate').get_attribute('title')
-                review_header = review.find_element_by_css_selector('span.noQuotes').text.strip()
-                review_body = review.find_element_by_css_selector('p.partial_entry').text.strip()
-                
+            while True:
+                reviews = driver.find_elements_by_css_selector('div.review-container')
                 current_page = driver.find_elements_by_css_selector(".pageNum.current")[0].get_attribute("data-page-number")
+                last_page = driver.find_elements_by_css_selector(".pageNum.last")[0].get_attribute("data-page-number")
+                print("Working on '" + attraction + " 'with '" + traveller_type + "' type at page " + current_page + " out of " + last_page + "...")
 
-                data.append({
-                    "attraction": attraction,
-                    "traveller_type": traveller_type,
-                    "uid": uid,
-                    "review_id": review_id,
-                    "user_name": user_name,
-                    "rating": rating,
-                    "review_date": review_date,
-                    "review_header": review_header,
-                    "review_body": review_body
-                })
-            
-            print("Working on " + attraction + " with " + traveller_type + " type at page " + current_page + " ...")
+                for review in reviews:
+
+                    selector_uid = review.find_elements_by_css_selector('div.memberOverlayLink')
+                    selector_review_id = review
+                    selector_user_name = review.find_element_by_css_selector('div.username.mo')
+
+                    uid = selector_uid[0].get_attribute("id").strip() if selector_uid else ""
+                    review_id = selector_review_id.get_attribute("data-reviewid")
+                    user_name = selector_user_name.text.strip() if selector_user_name else ""
+                    rating = get_rating(review.find_element_by_css_selector('.rating span').get_attribute('class'))
+                    review_date = review.find_element_by_css_selector('span.ratingDate.relativeDate').get_attribute('title')
+                    review_header = review.find_element_by_css_selector('span.noQuotes').text.strip()
+                    review_body = review.find_element_by_css_selector('p.partial_entry').text.strip()
+
+                    data.append({
+                        "attraction": attraction,
+                        "traveller_type": traveller_type,
+                        "uid": uid,
+                        "review_id": review_id,
+                        "user_name": user_name,
+                        "rating": rating,
+                        "review_date": review_date,
+                        "review_header": review_header,
+                        "review_body": review_body
+                    })
+                
+                # Try click on next button, error raised if next button is not found
+                try:
+                    driver.find_element_by_css_selector('#taplc_location_reviews_list_0 .nav.next.taLnk').click()
+                    no_more_pages = False
+                except:
+                    no_more_pages = True 
+
+                if(no_more_pages): break
+                sleep(1.5)
 
         except Exception as err:
             print("Error: " + err)
