@@ -63,8 +63,8 @@ class Scraper:
 
         try:
             driver = webdriver.Chrome("drivers/chromedriver.exe")
-            driver.get(url)
             print("Opening url " + url)
+            driver.get(url)
 
             # Reopen page and check traveller type filter
             driver.find_element_by_css_selector('#taplc_location_review_filter_controls_0_filterSegment_' + traveller_type).click()

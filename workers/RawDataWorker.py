@@ -40,8 +40,6 @@ class RawDataWorker:
             "Friends"
         ]
 
-        traveller_types = ["Solo"]
-
         if attraction == "Singapore Zoo":
             url = "https://www.tripadvisor.com.sg/Attraction_Review-g294265-d324542-Reviews-Singapore_Zoo-Singapore.html"
         elif attraction == "River Safari":
@@ -98,10 +96,10 @@ class RawDataWorker:
         self.__monitor_action(self.__write_raw_users, "Write Raw Users")
 
     def extract_raw_reviews_singapore_zoo(self):
-        self.__write_raw_reviews_singapore_zoo()
+        self.__monitor_action(self.__write_raw_reviews_singapore_zoo, "Write Raw Reviews of Singapore Zoo")
 
     def extract_raw_reviews_river_safari(self):
-        self.__write_raw_reviews_river_safari()
+        self.__monitor_action(self.__write_raw_reviews_river_safari, "Write Raw Reviews of River Safari")
 
     def extract_raw_reviews_night_safari(self):
-        self.__write_raw_reviews_night_safari()
+        self.__monitor_action(self.__write_raw_reviews_night_safari, "Write Raw Reviews of Night Safari")

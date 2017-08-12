@@ -44,23 +44,23 @@ class Repository:
         
     # Readers
         
-    def read_raw_reviews_singapore_zoo(self, query={}, projection={}):
+    def read_raw_reviews_singapore_zoo(self, query={}, projection=None):
         return self.__read('raw_reviews_singapore_zoo', query, projection)
 
-    def read_raw_reviews_river_safari(self, query={}, projection={}):
+    def read_raw_reviews_river_safari(self, query={}, projection=None):
         return self.__read('raw_reviews_river_safari', query, projection)
 
-    def read_raw_reviews_night_safari(self, query={}, projection={}):
+    def read_raw_reviews_night_safari(self, query={}, projection=None):
         return self.__read('raw_reviews_night_safari', query, projection)
 
-    def read_raw_users(self, query={}, projection={}):
+    def read_raw_users(self, query={}, projection=None):
         return self.__read('raw_users', query, projection)
         
-    def read_processed_reviews(self, query={}, projection={}):
+    def read_processed_reviews(self, query={}, projection=None):
         return self.__read('processed_reviews', query, projection)
     
-    def read_processed_users(self, query={}, projection={}):
+    def read_processed_users(self, query={}, projection=None):
         return self.__read('processed_users', query, projection)
     
-    def read_analysis(self, query={}, projection={}):
+    def read_analysis(self, query={}, projection=None):
         return self.__read('analysis', query, projection)
