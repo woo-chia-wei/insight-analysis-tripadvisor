@@ -1,7 +1,9 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from time import sleep
 import requests
 import pprint as pp
+import re as regex
 
 class Scraper:
 
@@ -43,66 +45,73 @@ class Scraper:
             "user_contribution": user_contribution
         }
 
-    def extract_reviews(self, url):
+    def extract_reviews(self, attraction, url):
+
+        def get_rating(rating_class):
+            for i in [1,2,3,4,5]:
+                if(('bubble_' + str(i) + '0') in rating_class):
+                    return i
+
+        data = []
+        traveller_types = [
+            "Families",
+            "Couples",
+            "Solo",
+            "Business",
+            "Friends"
+        ]
+
         try:
             driver = webdriver.Chrome("drivers/chromedriver.exe")
             driver.get(url)
-            pp.pprint(driver.find_element_by_css_selector('h1 a').text)
-            pp.pprint([element.text for element in driver.find_elements_by_css_selector('.tag-item a.tag')])
-        except Exception:
-            pp.pprint(Exception)
+
+            for traveller_type in traveller_types:
+                # Reopen page and check traveller type filter
+                driver.find_element_by_css_selector('#taplc_location_review_filter_controls_0_filterSegment_' + traveller_type).click()
+
+                # Waits for loading
+                sleep(2)
+                
+                # Start extracting
+                reviews = driver.find_elements_by_css_selector('div.review-container')
+                for review in reviews:
+
+                    selector_uid = review.find_elements_by_css_selector('div.memberOverlayLink')
+                    selector_review_id = review
+                    selector_user_name = review.find_element_by_css_selector('div.username.mo')
+
+                    uid = selector_uid[0].get_attribute("id").strip() if selector_uid else ""
+                    review_id = selector_review_id.get_attribute("data-reviewid")
+                    user_name = selector_user_name.text.strip() if selector_user_name else ""
+                    rating = get_rating(review.find_element_by_css_selector('.rating span').get_attribute('class'))
+                    review_date = review.find_element_by_css_selector('span.ratingDate.relativeDate').get_attribute('title')
+                    review_header = review.find_element_by_css_selector('span.noQuotes').text.strip()
+                    review_body = review.find_element_by_css_selector('p.partial_entry').text.strip()
+                    
+                    current_page = driver.find_elements_by_css_selector(".pageNum.current")[0].get_attribute("data-page-number")
+
+                    data.append({
+                        "attraction": attraction,
+                        "traveller_type": traveller_type,
+                        "uid": uid,
+                        "review_id": review_id,
+                        "user_name": user_name,
+                        "rating": rating,
+                        "review_date": review_date,
+                        "review_header": review_header,
+                        "review_body": review_body
+                    })
+                
+                print("Working on " + attraction + " with " + traveller_type + " type at page " + current_page + " ...")
+
+                # Uncheck traveller type filter
+                sleep(3)
+                driver.find_element_by_css_selector('#taplc_location_review_filter_controls_0_filterSegment_' + traveller_type).click()
+                sleep(3)
+
+        except Exception as err:
+            print("Error: " + err)
         finally:
             driver.quit()
-
-    def extract_reviews_bk(url):
-
-
-
-
-
-        bs = get_soup(url)
-        uid,reviewid,user_name,location=[],[],[],[]
-        rating_score,rating_date,via,review_header,review_content = [],[],[],[],[]
-        for container in bs.select('div.review-container'):
-            if container.select_one('div.memberOverlayLink'):
-                uid_src = container.select_one('div.memberOverlayLink')['id']
-                uid_tmp = re.compile('UID_(.*)-SRC').search(uid_src).group(1)
-            else:
-                uid_tmp = ""
-            reviewid_tmp = container['data-reviewid'] if container['data-reviewid'] else ""
-            user_name_tmp = container.select_one('div.username.mo').text.strip() \
-                if container.select_one('div.username.mo') else ""
-            location_tmp = container.select_one('div.location').text.strip().\
-                replace("\n"," ").replace(",","").replace("  "," ") \
-                if container.select_one('div.location') else ""
-            #if uid_tmp:
-            #   user_profile_url_tmp = get_user_profile_url(uid_tmp)
-            #else:
-            #   user_profile_url_tmp = ""
-            #user_profile_url_tmp = "https://www.tripadvisor.com.sg/members/" + user_name_tmp \
-            #    if user_name_tmp != "A TripAdvisor Member" else ""
-            rating_score_tmp = re.compile('bubble_(\d)0').\
-                search(container.select_one('div.rating.reviewItemInline').span['class'][1]).group(1)
-            rating_date_tmp = container.select_one('span.ratingDate.relativeDate')['title']
-            #via = container.select_one('div.rating.reviewItemInline').a['class'] if container.select_one('div.rating.reviewItemInline').a else ""
-            if container.select_one('div.rating.reviewItemInline').a:
-                via_tmp = container.select_one('div.rating.reviewItemInline').a['class']
-                via_tmp = re.compile('via(\w+)').search(str(via_tmp)).group(1)
-            else:
-                via_tmp = "Website"
-            review_header_tmp = container.select_one('span.noQuotes').text.strip()
-            review_content_tmp = container.select_one('p.partial_entry').text.strip().\
-                replace("\n"," ").replace(",","").replace("  "," ")
-            #
-            uid.append(uid_tmp)
-            reviewid.append(reviewid_tmp)
-            user_name.append(user_name_tmp)
-            location.append(location_tmp)
-            #user_profile_url.append(user_profile_url_tmp)
-            rating_score.append(rating_score_tmp)
-            rating_date.append(rating_date_tmp)
-            via.append(via_tmp)
-            review_header.append(review_header_tmp)
-            review_content.append(review_content_tmp)
-        return(uid,reviewid,user_name,location,
-            rating_score,rating_date,via,review_header,review_content)
+            print(str(len(data)) + " data is extracted...")
+            return data

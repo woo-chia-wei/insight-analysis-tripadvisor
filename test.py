@@ -15,6 +15,9 @@ import pprint as pp
 # repo = Repository()
 # pp.pprint(repo.read_raw_users())
 
-url = "http://quotes.toscrape.com"
+urls = ["https://www.tripadvisor.com.sg/Attraction_Review-g294265-d324542-Reviews-Singapore_Zoo-Singapore.html"]
 worker = RawDataWorker()
-worker.write_raw_reviews(url)
+worker.write_raw_reviews(urls)
+
+repo = Repository()
+pp.pprint(repo.read_raw_reviews())
