@@ -14,7 +14,7 @@ class Scraper:
         except requests.exceptions.MissingSchema as err:
             print(err)
 
-    def extract_user(self, url):
+    def extract_user(self, uid, index, total):
 
         def get_travel_style(soup):
             travel_style_list = []
@@ -23,15 +23,24 @@ class Scraper:
                 travel_style_list.append(ts.get_text().strip())
             return travel_style_list
 
+        def get_url(uid):
+            soup = self.get_soup("https://www.tripadvisor.com.sg/MemberOverlay?uid=" + uid)
+            url = soup.select_one('.memberOverlay a')['href']
+            return "https://www.tripadvisor.com.sg" + url
+
+        url = get_url(uid)
         soup = self.get_soup(url)
+
+        print("Extracting profile (" + str(index + 1) + "/" + str(total) + ") from " + url)
 
         username = soup.find('span', {'class': 'nameText'}).get_text().strip()
         hometown = soup.find('div', {'class': 'hometown'}).get_text().strip()
         age_since = soup.select_one('.ageSince .since').get_text().strip()
-        short_desc = soup.select('.ageSince p')[1].get_text().strip()
-        no_reviews = int(soup.find('a', {'name': 'reviews'}).get_text().replace('Reviews', ''))
+        short_desc = soup.select('.ageSince p')[1].get_text().strip() if len(soup.select('.ageSince p')) >= 2 else ""
+        no_reviews = int(soup.find('a', {'name': 'reviews'}).get_text().replace('Reviews', '').replace('Review', ''))
         travel_style = get_travel_style(soup)
-        user_contribution = int(soup.find('div',{'class':'level tripcollectiveinfo'}).find('span').get_text())
+        selector_user_contribution = soup.find('div',{'class':'level tripcollectiveinfo'})
+        user_contribution = int(selector_user_contribution.find('span').get_text()) if selector_user_contribution else ""
         
         return {
             "username": username,
@@ -43,7 +52,7 @@ class Scraper:
             "user_contribution": user_contribution
         }
 
-    def extract_reviews(self, attraction, url):
+    def extract_reviews(self, attraction, url, traveller_type):
 
         def get_rating(rating_class):
             for i in [1,2,3,4,5]:
@@ -51,61 +60,46 @@ class Scraper:
                     return i
 
         data = []
-        traveller_types = [
-            "Families",
-            "Couples",
-            "Solo",
-            "Business",
-            "Friends"
-        ]
 
         try:
             driver = webdriver.Chrome("drivers/chromedriver.exe")
             driver.get(url)
 
-            for traveller_type in traveller_types:
-                # Reopen page and check traveller type filter
-                driver.find_element_by_css_selector('#taplc_location_review_filter_controls_0_filterSegment_' + traveller_type).click()
+            # Reopen page and check traveller type filter
+            driver.find_element_by_css_selector('#taplc_location_review_filter_controls_0_filterSegment_' + traveller_type).click()
+            sleep(1)
+            
+            # Start extracting
+            reviews = driver.find_elements_by_css_selector('div.review-container')
+            for review in reviews:
 
-                # Waits for loading
-                sleep(2)
+                selector_uid = review.find_elements_by_css_selector('div.memberOverlayLink')
+                selector_review_id = review
+                selector_user_name = review.find_element_by_css_selector('div.username.mo')
+
+                uid = selector_uid[0].get_attribute("id").strip() if selector_uid else ""
+                review_id = selector_review_id.get_attribute("data-reviewid")
+                user_name = selector_user_name.text.strip() if selector_user_name else ""
+                rating = get_rating(review.find_element_by_css_selector('.rating span').get_attribute('class'))
+                review_date = review.find_element_by_css_selector('span.ratingDate.relativeDate').get_attribute('title')
+                review_header = review.find_element_by_css_selector('span.noQuotes').text.strip()
+                review_body = review.find_element_by_css_selector('p.partial_entry').text.strip()
                 
-                # Start extracting
-                reviews = driver.find_elements_by_css_selector('div.review-container')
-                for review in reviews:
+                current_page = driver.find_elements_by_css_selector(".pageNum.current")[0].get_attribute("data-page-number")
 
-                    selector_uid = review.find_elements_by_css_selector('div.memberOverlayLink')
-                    selector_review_id = review
-                    selector_user_name = review.find_element_by_css_selector('div.username.mo')
-
-                    uid = selector_uid[0].get_attribute("id").strip() if selector_uid else ""
-                    review_id = selector_review_id.get_attribute("data-reviewid")
-                    user_name = selector_user_name.text.strip() if selector_user_name else ""
-                    rating = get_rating(review.find_element_by_css_selector('.rating span').get_attribute('class'))
-                    review_date = review.find_element_by_css_selector('span.ratingDate.relativeDate').get_attribute('title')
-                    review_header = review.find_element_by_css_selector('span.noQuotes').text.strip()
-                    review_body = review.find_element_by_css_selector('p.partial_entry').text.strip()
-                    
-                    current_page = driver.find_elements_by_css_selector(".pageNum.current")[0].get_attribute("data-page-number")
-
-                    data.append({
-                        "attraction": attraction,
-                        "traveller_type": traveller_type,
-                        "uid": uid,
-                        "review_id": review_id,
-                        "user_name": user_name,
-                        "rating": rating,
-                        "review_date": review_date,
-                        "review_header": review_header,
-                        "review_body": review_body
-                    })
-                
-                print("Working on " + attraction + " with " + traveller_type + " type at page " + current_page + " ...")
-
-                # Uncheck traveller type filter
-                sleep(3)
-                driver.find_element_by_css_selector('#taplc_location_review_filter_controls_0_filterSegment_' + traveller_type).click()
-                sleep(3)
+                data.append({
+                    "attraction": attraction,
+                    "traveller_type": traveller_type,
+                    "uid": uid,
+                    "review_id": review_id,
+                    "user_name": user_name,
+                    "rating": rating,
+                    "review_date": review_date,
+                    "review_header": review_header,
+                    "review_body": review_body
+                })
+            
+            print("Working on " + attraction + " with " + traveller_type + " type at page " + current_page + " ...")
 
         except Exception as err:
             print("Error: " + err)

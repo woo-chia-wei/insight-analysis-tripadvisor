@@ -15,9 +15,9 @@ class Repository:
         else:
             collection.insert_one(data)
             
-    def __read(self, collection_name, criteria):
+    def __read(self, collection_name, query, projection):
         collection = self.db[collection_name]
-        return list(collection.find(criteria))
+        return list(collection.find(query, projection))
     
     # Writers
     
@@ -38,17 +38,17 @@ class Repository:
         
     # Readers
         
-    def read_raw_reviews(self, criteria={}):
-        return self.__read('raw_reviews', criteria)
+    def read_raw_reviews(self, query={}, projection={}):
+        return self.__read('raw_reviews', query, projection)
 
-    def read_raw_users(self, criteria={}):
-        return self.__read('raw_users', criteria)
+    def read_raw_users(self, query={}, projection={}):
+        return self.__read('raw_users', query, projection)
         
-    def read_processed_reviews(self, criteria={}):
-        return self.__read('processed_reviews', criteria) 
+    def read_processed_reviews(self, query={}, projection={}):
+        return self.__read('processed_reviews', query, projection)
     
-    def read_processed_users(self, criteria={}):
-        return self.__read('processed_users', criteria)  
+    def read_processed_users(self, query={}, projection={}):
+        return self.__read('processed_users', query, projection)
     
-    def read_analysis(self, criteria={}):
-        return self.__read('analysis', criteria)
+    def read_analysis(self, query={}, projection={}):
+        return self.__read('analysis', query, projection)
