@@ -21,8 +21,14 @@ class Repository:
     
     # Writers
     
-    def write_raw_reviews(self, data):
-        self.__write('raw_reviews', data)
+    def write_raw_reviews_singapore_zoo(self, data):
+        self.__write('raw_reviews_singapore_zoo', data)
+
+    def write_raw_reviews_river_safari(self, data):
+        self.__write('raw_reviews_river_safari', data)
+
+    def write_raw_reviews_night_safari(self, data):
+        self.__write('raw_reviews_night_safari', data)
 
     def write_raw_users(self, data):
         self.__write('raw_users', data)
@@ -38,8 +44,14 @@ class Repository:
         
     # Readers
         
-    def read_raw_reviews(self, query={}, projection={}):
-        return self.__read('raw_reviews', query, projection)
+    def read_raw_reviews_singapore_zoo(self, query={}, projection={}):
+        return self.__read('raw_reviews_singapore_zoo', query, projection)
+
+    def read_raw_reviews_river_safari(self, query={}, projection={}):
+        return self.__read('raw_reviews_river_safari', query, projection)
+
+    def read_raw_reviews_night_safari(self, query={}, projection={}):
+        return self.__read('raw_reviews_night_safari', query, projection)
 
     def read_raw_users(self, query={}, projection={}):
         return self.__read('raw_users', query, projection)

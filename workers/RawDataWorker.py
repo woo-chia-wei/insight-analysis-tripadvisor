@@ -20,7 +20,16 @@ class RawDataWorker:
         # Stop stopwatch
         sw.stop()  
 
-    def __write_raw_reviews(self):
+    def __write_raw_reviews_singapore_zoo(self):
+        self.__write_raw_reviews("Singapore Zoo")
+
+    def __write_raw_reviews_river_safari(self):
+        self.__write_raw_reviews("River Safari")
+
+    def __write_raw_reviews_night_safari(self):
+        self.__write_raw_reviews("Night Safari")
+
+    def __write_raw_reviews(self, attraction):
         data = []
         traveller_types = [
             "Families",
@@ -29,27 +38,19 @@ class RawDataWorker:
             "Business",
             "Friends"
         ]
-        attractions = [
-            {
-                "name": "Singapore Zoo",
-                "url": "https://www.tripadvisor.com.sg/Attraction_Review-g294265-d324542-Reviews-Singapore_Zoo-Singapore.html"
-            },
-            {
-                "name": "River Safari",
-                "url": "https://www.tripadvisor.com.sg/Attraction_Review-g294265-d4089881-Reviews-River_Safari-Singapore.html"
-            },
-            {
-                "name": "Night Safari",
-                "url": "https://www.tripadvisor.com.sg/Attraction_Review-g294265-d324761-Reviews-Night_Safari-Singapore.html"
-            }
-        ]
 
-        for attraction in attractions:
-            for traveller_type in traveller_types:
-                # if(traveller_type != "Business"): continue
-                if(attraction['name'] != 'Night Safari'): continue
+        if attraction == "Singapore Zoo":
+            url = "https://www.tripadvisor.com.sg/Attraction_Review-g294265-d324542-Reviews-Singapore_Zoo-Singapore.html"
+        elif attraction == "River Safari":
+            url = "https://www.tripadvisor.com.sg/Attraction_Review-g294265-d4089881-Reviews-River_Safari-Singapore.html"
+        elif attraction == "Night Safari":
+            url = "https://www.tripadvisor.com.sg/Attraction_Review-g294265-d324761-Reviews-Night_Safari-Singapore.html"
+        else:
+            print("Selected attraction is not supported in this system.")
+            pass
 
-                data += self.scraper.extract_reviews(attraction['name'], attraction['url'], traveller_type)
+        for traveller_type in traveller_types:
+            data += self.scraper.extract_reviews(attraction, url, traveller_type)
 
         if(len(data) != 0):
             self.repo.write_raw_reviews(data)
@@ -83,3 +84,12 @@ class RawDataWorker:
 
     def extract_raw_users_all_attractions(self):
         self.__monitor_action(self.__write_raw_users, "Write Raw Users")
+
+    def extract_raw_reviews_singapore_zoo(self):
+        self.__write_raw_reviews_singapore_zoo()
+
+    def extract_raw_reviews_river_safari(self):
+        self.__write_raw_reviews_river_safari()
+
+    def extract_raw_reviews_night_safari(self):
+        self.__write_raw_reviews_night_safari()
