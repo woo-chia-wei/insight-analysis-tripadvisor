@@ -1,11 +1,14 @@
 from workers.RawDataWorker import RawDataWorker
+from workers.ProcessDataWorker import ProcessDataWorker
 
 raw_data_worker = RawDataWorker()
+process_data_worker = ProcessDataWorker()
 actions = {
-    "1": {"name": "Get raw reviews from Singapore Zoo", "execute": "raw_data_worker.extract_raw_reviews_singapore_zoo()"},
-    "2": {"name": "Get raw reviews from River Safari", "execute": "raw_data_worker.extract_raw_reviews_river_safari()"},
-    "3": {"name": "Get raw reviews from Night Safari", "execute": "raw_data_worker.extract_raw_reviews_night_safari()"},
-    "4": {"name": "Get raw user profiles from all attractions", "execute": "raw_data_worker.extract_raw_users_all_attractions()"}
+    "1": {"name": "Get raw reviews from Singapore Zoo.", "execute": "raw_data_worker.extract_raw_reviews_singapore_zoo()"},
+    "2": {"name": "Get raw reviews from River Safari.", "execute": "raw_data_worker.extract_raw_reviews_river_safari()"},
+    "3": {"name": "Get raw reviews from Night Safari.", "execute": "raw_data_worker.extract_raw_reviews_night_safari()"},
+    "4": {"name": "Get raw user profiles from all attractions.", "execute": "raw_data_worker.extract_raw_users_all_attractions()"},
+    "5": {"name": "Merge raw reviews from all attractions into single raw reviews.", "execute": "process_data_worker.merge_all_attractions()"},
 }
 
 print("####################################")

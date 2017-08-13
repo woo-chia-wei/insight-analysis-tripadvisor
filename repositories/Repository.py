@@ -21,6 +21,9 @@ class Repository:
     
     # Writers
     
+    def write_raw_reviews_all_attractions(self, data):
+        self.__write('raw_reviews', data)
+
     def write_raw_reviews_singapore_zoo(self, data):
         self.__write('raw_reviews_singapore_zoo', data)
 

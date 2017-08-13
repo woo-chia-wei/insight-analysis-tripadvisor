@@ -10,7 +10,7 @@ class RawDataWorker:
         self.scraper = Scraper()
         self.repo = Repository()
 
-    def __monitor_action(self, process, process_name):
+    def __monitor_process(self, process, process_name):
         # Start stopwatch
         sw = StopWatch(process_name)
         sw.start()
@@ -93,13 +93,13 @@ class RawDataWorker:
             print("No data is being imported. There might be error during the web scraping.")
 
     def extract_raw_users_all_attractions(self):
-        self.__monitor_action(self.__write_raw_users, "Write Raw Users")
+        self.__monitor_process(self.__write_raw_users, "Write Raw Users")
 
     def extract_raw_reviews_singapore_zoo(self):
-        self.__monitor_action(self.__write_raw_reviews_singapore_zoo, "Write Raw Reviews of Singapore Zoo")
+        self.__monitor_process(self.__write_raw_reviews_singapore_zoo, "Write Raw Reviews of Singapore Zoo")
 
     def extract_raw_reviews_river_safari(self):
-        self.__monitor_action(self.__write_raw_reviews_river_safari, "Write Raw Reviews of River Safari")
+        self.__monitor_process(self.__write_raw_reviews_river_safari, "Write Raw Reviews of River Safari")
 
     def extract_raw_reviews_night_safari(self):
-        self.__monitor_action(self.__write_raw_reviews_night_safari, "Write Raw Reviews of Night Safari")
+        self.__monitor_process(self.__write_raw_reviews_night_safari, "Write Raw Reviews of Night Safari")

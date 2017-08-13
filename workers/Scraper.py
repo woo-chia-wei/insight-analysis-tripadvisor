@@ -83,7 +83,7 @@ class Scraper:
                     more_links = driver.find_elements_by_css_selector('div.review-container .partial_entry span.taLnk.ulBlueLinks')
                     if len(more_links) == 0: break
                     for link in more_links:
-                        sleep(0.3)
+                        sleep(0.5)
                         try:
                             link.click()
                         except:
@@ -122,7 +122,7 @@ class Scraper:
                     no_more_pages = True 
 
                 if(no_more_pages): break
-                sleep(1.5)
+                sleep(1)
 
         except Exception as err:
             print("Error: " + err)
