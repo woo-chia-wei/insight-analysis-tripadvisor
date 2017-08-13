@@ -36,9 +36,12 @@ class ProcessDataWorker:
         self.repo.write_processed_reviews(reviews)
 
     def __data_cleansing_raw_users(self):
+
         users = self.repo.read_raw_users()
         for user in users:
-            # Convert 'age_since' to 'age_since_year' and 'age_since_month'
+
+            # Get 'age_since_year' and 'age_since_month' from 'age_since'
+            # Remove 'age_since'
             age_since = user['age_since'].lower().replace("since", "").strip()
             if age_since == "this week" or age_since == "this month":
                 month = date.today().strftime("%B")
@@ -49,8 +52,18 @@ class ProcessDataWorker:
             user['age_since_month'] = age_since_date.month
             user.pop('age_since')
 
-            # Get gender
-            
+            # Get 'gender' from 'short_desc'
+            # Remove 'short_desc'
+            short_desc = user['short_desc'].lower()
+            if 'female' in short_desc:
+                gender = "female"
+            elif 'male' in short_desc:
+                gender = 'male'
+            else:
+                gender = ''
+            user['gender'] = gender
+            user.pop('short_desc')
+
         print("Data processing is done for raw users, data is then copied to collection 'processed_users'.")
         self.repo.write_processed_users(users)
 

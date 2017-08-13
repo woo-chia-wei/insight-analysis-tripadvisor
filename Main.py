@@ -13,6 +13,9 @@ actions = {
     "7": {"name": "Process final raw users and copy to processed users.", "execute": "process_data_worker.process_user_reviews()"}
 }
 
+# Console Interface
+# User can selection action to perform
+
 print("####################################")
 print("## WildLife Reserves Web Scraping ##")
 print("####################################")
