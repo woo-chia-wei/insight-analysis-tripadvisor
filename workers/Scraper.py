@@ -33,11 +33,11 @@ class Scraper:
             visited_cities = selector_visited_cities.parent.select("span")[1].text if selector_visited_cities else ""
             helpful_votes = selector_helpful_votes.parent.select("span")[1].text if selector_helpful_votes else ""
             if selector_reviews_counts:
-                review_1x = int(selector_reviews_counts[4].text)
-                review_2x = int(selector_reviews_counts[3].text)
-                review_3x = int(selector_reviews_counts[2].text)
-                review_4x = int(selector_reviews_counts[1].text)
-                review_5x = int(selector_reviews_counts[0].text)
+                review_1x = int(selector_reviews_counts[4].text.replace(',', ''))
+                review_2x = int(selector_reviews_counts[3].text.replace(',', ''))
+                review_3x = int(selector_reviews_counts[2].text.replace(',', ''))
+                review_4x = int(selector_reviews_counts[1].text.replace(',', ''))
+                review_5x = int(selector_reviews_counts[0].text.replace(',', ''))
             else:
                 review_1x = review_2x = review_3x = review_4x = review_5x = 0
 
