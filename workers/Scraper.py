@@ -23,12 +23,35 @@ class Scraper:
                 travel_style_list.append(ts.get_text().strip())
             return travel_style_list
 
-        def get_url(uid):
+        def get_member_overlay(uid):
             soup = self.get_soup("https://www.tripadvisor.com.sg/MemberOverlay?uid=" + uid)
-            url = soup.select_one('.memberOverlay a')['href']
-            return "https://www.tripadvisor.com.sg" + url
 
-        url = get_url(uid)
+            selector_visited_cities = soup.select_one(".memberOverlay .countsReviewEnhancementsItem .globe-world")
+            selector_helpful_votes = soup.select_one(".memberOverlay .countsReviewEnhancementsItem .thumbs-up-fill")
+            selector_reviews_counts = soup.select(".memberOverlay .rowCountReviewEnhancements.rowCellReviewEnhancements")
+
+            visited_cities = selector_visited_cities.parent.select("span")[1].text if selector_visited_cities else ""
+            helpful_votes = selector_helpful_votes.parent.select("span")[1].text if selector_helpful_votes else ""
+            if selector_reviews_counts:
+                review_1x = int(selector_reviews_counts[4].text)
+                review_2x = int(selector_reviews_counts[3].text)
+                review_3x = int(selector_reviews_counts[2].text)
+                review_4x = int(selector_reviews_counts[1].text)
+                review_5x = int(selector_reviews_counts[0].text)
+            else:
+                review_1x = review_2x = review_3x = review_4x = review_5x = 0
+
+            url = soup.select_one('.memberOverlay a')['href']
+            return (visited_cities,
+                    helpful_votes,
+                    review_1x,
+                    review_2x,
+                    review_3x,
+                    review_4x,
+                    review_5x,
+                    "https://www.tripadvisor.com.sg" + url)
+
+        (visited_cities, helpful_votes, review_1x, review_2x, review_3x, review_4x, review_5x, url) = get_member_overlay(uid)
         soup = self.get_soup(url)
 
         print("Extracting profile (" + str(index + 1) + "/" + str(total) + ") from " + url)
@@ -49,7 +72,14 @@ class Scraper:
             "short_desc": short_desc,
             "no_reviews": no_reviews, 
             "travel_style": travel_style,
-            "user_contribution": user_contribution
+            "user_contribution": user_contribution,
+            "visited_cities": visited_cities,
+            "helpful_votes": helpful_votes,
+            "review_1x": review_1x,
+            "review_2x": review_2x,
+            "review_3x": review_3x,
+            "review_4x": review_4x,
+            "review_5x": review_5x,
         }
 
     def extract_reviews(self, attraction, url, traveller_type):
@@ -83,7 +113,7 @@ class Scraper:
                     more_links = driver.find_elements_by_css_selector('div.review-container .partial_entry span.taLnk.ulBlueLinks')
                     if len(more_links) == 0: break
                     for link in more_links:
-                        sleep(0.6)
+                        sleep(0.8)
                         try:
                             link.click()
                         except:
@@ -122,7 +152,7 @@ class Scraper:
                     no_more_pages = True 
 
                 if(no_more_pages): break
-                sleep(1.5)
+                sleep(2)
 
         except Exception as err:
             print("Error: " + err)
