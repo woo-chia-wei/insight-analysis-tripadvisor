@@ -1,5 +1,5 @@
 from repositories.Repository import Repository
-from workers.StopWatch import StopWatch
+from workers.StopWatch import stop_watch
 from dateutil.parser import parse
 from datetime import date
 import re as regex
@@ -8,18 +8,7 @@ class ProcessDataWorker:
 
     def __init__(self):
         self.repo = Repository()
-
-    def __monitor_process(self, process, process_name):
-        # Start stopwatch
-        sw = StopWatch(process_name)
-        sw.start()
-
-        # Run process
-        process()
-
-        # Stop stopwatch
-        sw.stop()
-
+    
     def __merge_all_attractions(self):
         all_data = []
         all_data += self.repo.read_raw_reviews_singapore_zoo()
@@ -67,12 +56,15 @@ class ProcessDataWorker:
         print("Data processing is done for raw users, data is then copied to collection 'processed_users'.")
         self.repo.write_processed_users(users)
 
+    @stop_watch
     def merge_all_attractions(self):
-        self.__monitor_process(self.__merge_all_attractions, "Merge all individual attractions to final raw reviews table.")
+        self.__merge_all_attractions()
 
+    @stop_watch
     def process_raw_reviews(self):
-        self.__monitor_process(self.__data_cleansing_raw_reviews, "Process raw reviews and then copy to collection 'processed_reviews'.")
+        self.__data_cleansing_raw_reviews()
 
+    @stop_watch
     def process_user_reviews(self):
-        self.__monitor_process(self.__data_cleansing_raw_users, "Process user reviews and then copy to collection 'processed_users'.")
+        self.__data_cleansing_raw_users()
     

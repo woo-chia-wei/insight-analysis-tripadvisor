@@ -16,9 +16,9 @@ actions = {
 # Console Interface
 # User can selection action to perform
 
-print("####################################")
-print("## WildLife Reserves Web Scraping ##")
-print("####################################")
+print("##############################################")
+print("##      WildLife Reserves Web Scraping      ##")
+print("##############################################")
 for action_key, action_item in actions.items():
     print(action_key + ". " + action_item['name'])
 
@@ -27,6 +27,6 @@ choice = input("Please enter your choice. ")
 if choice not in actions:
     print("'" + choice + "' is invalid choice.")
 else:
-    print("====================================")
+    print("==============================================")
     eval(actions[choice]['execute'])
 

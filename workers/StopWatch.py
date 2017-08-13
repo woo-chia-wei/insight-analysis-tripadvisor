@@ -1,22 +1,7 @@
 from time import time
 
-class StopWatch:
-    
-    def __init__(self, action):
-        self.start_time = 0
-        self.elapsed_time = 0
-        self.action = action
-
-    def start(self):
-        self.start_time = time()
-        print("Start stopwatch for '" + self.action + "' ...")
-
-    def stop(self):
-        self.elapsed_time = time() - self.start_time
-        print("Stopping stopwatch for '" + self.action + "' ...")
-        print(self.__convert_seconds(self.elapsed_time))
-
-    def __convert_seconds(self, seconds):
+def stop_watch(f):
+    def convert_seconds(seconds):
         seconds = int(seconds)
         minutes = int(seconds / 60)
         seconds = seconds % 60
@@ -32,3 +17,12 @@ class StopWatch:
             body = str(hours) + " hours " + str(minutes) + " minutes " + str(seconds) + " seconds"
 
         return "Total elapsed time is " + body + "."
+
+    def stop_watch_decoractor(self):
+        print("Start stopwatch for '" + f.__name__ + "' ...")
+        start_time = time()
+        f(self)
+        print("Stopping stopwatch for '" + f.__name__+ "' ...")
+        print(convert_seconds(time() - start_time))
+
+    return stop_watch_decoractor
