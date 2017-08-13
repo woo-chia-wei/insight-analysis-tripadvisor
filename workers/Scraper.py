@@ -152,7 +152,7 @@ class Scraper:
                     no_more_pages = True 
 
                 if(no_more_pages): break
-                sleep(2)
+                sleep(1.5)
 
         except Exception as err:
             print("Error: " + err)

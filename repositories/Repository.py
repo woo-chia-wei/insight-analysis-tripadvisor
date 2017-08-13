@@ -70,3 +70,44 @@ class Repository:
     
     def read_analysis(self, query={}, projection=None):
         return self.__read('analysis', query, projection)
+
+    # Data Patching
+
+    def write_raw_reviews_singapore_zoo_families(self, data):
+        self.__write('raw_reviews_singapore_zoo_families', data)
+
+    def write_raw_reviews_singapore_zoo_couples(self, data):
+        self.__write('raw_reviews_singapore_zoo_couples', data)
+
+    def write_raw_reviews_singapore_zoo_solo(self, data):
+        self.__write('raw_reviews_singapore_zoo_solo', data)
+
+    def write_raw_reviews_singapore_zoo_business(self, data):
+        self.__write('raw_reviews_singapore_zoo_business', data)
+
+    def write_raw_reviews_singapore_zoo_friends(self, data):
+        self.__write('raw_reviews_singapore_zoo_friends', data)
+
+    def merge_raw_reviews_singapore_zoo_all_traveller_types(self, data):
+        data = []
+        data += self.__read('raw_reviews_singapore_zoo_families', {}, None)
+        data += self.__read('raw_reviews_singapore_zoo_couples', {}, None)
+        data += self.__read('raw_reviews_singapore_zoo_solo', {}, None)
+        data += self.__read('raw_reviews_singapore_zoo_business', {}, None)
+        data += self.__read('raw_reviews_singapore_zoo_friends', {}, None)
+        self.write_raw_reviews_singapore_zoo(data)
+
+    def read_raw_reviews_singapore_zoo_families(self, query={}, projection=None):
+        return self.__read('raw_reviews_singapore_zoo_families', query, projection)
+
+    def read_raw_reviews_singapore_zoo_couples(self, query={}, projection=None):
+        return self.__read('raw_reviews_singapore_zoo_couples', query, projection)
+
+    def read_raw_reviews_singapore_zoo_solo(self, query={}, projection=None):
+        return self.__read('raw_reviews_singapore_zoo_solo', query, projection)
+
+    def read_raw_reviews_singapore_zoo_business(self, query={}, projection=None):
+        return self.__read('raw_reviews_singapore_zoo_business', query, projection)
+
+    def read_raw_reviews_singapore_zoo_friends(self, query={}, projection=None):
+        return self.__read('raw_reviews_singapore_zoo_friends', query, projection)
