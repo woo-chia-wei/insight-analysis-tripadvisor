@@ -23,6 +23,14 @@ class Scraper:
                 travel_style_list.append(ts.get_text().strip())
             return travel_style_list
 
+        def get_passport_badge(soup):
+            badges = [badge for badge in soup.select('.memberBadges') if badge['data-type'] == 'PassportBadge']
+            return badges[0].select_one('.subText').text if badges else ""
+
+        def get_attraction_expert_badge(soup):
+            badges = [badge for badge in soup.select('.memberBadges') if badge['data-type'] == 'FunLoverBadge']
+            return badges[0].select_one('.subText').text if badges else ""
+
         def get_member_overlay(uid):
             soup = self.get_soup("https://www.tripadvisor.com.sg/MemberOverlay?uid=" + uid)
 
@@ -56,13 +64,19 @@ class Scraper:
 
         print("Extracting profile (" + str(index + 1) + "/" + str(total) + ") from " + url)
 
+        trophy_url = "https://www.tripadvisor.com.sg" + soup.select_one(".trophyCase")['href']
+        trophy_soup = self.get_soup(trophy_url)
+        selector_user_contribution = soup.find('div',{'class':'level tripcollectiveinfo'})
+
         username = soup.find('span', {'class': 'nameText'}).get_text().strip()
         hometown = soup.find('div', {'class': 'hometown'}).get_text().strip()
         age_since = soup.select_one('.ageSince .since').get_text().strip()
         short_desc = soup.select('.ageSince p')[1].get_text().strip() if len(soup.select('.ageSince p')) >= 2 else ""
         no_reviews = int(soup.find('a', {'name': 'reviews'}).get_text().replace('Reviews', '').replace('Review', ''))
         travel_style = get_travel_style(soup)
-        selector_user_contribution = soup.find('div',{'class':'level tripcollectiveinfo'})
+        passport_badge = get_passport_badge(trophy_soup)
+        attraction_expert_badge = get_attraction_expert_badge(trophy_soup)
+        
         user_contribution = int(selector_user_contribution.find('span').get_text()) if selector_user_contribution else ""
         
         return {
@@ -80,6 +94,11 @@ class Scraper:
             "review_3x": review_3x,
             "review_4x": review_4x,
             "review_5x": review_5x,
+            "profile_page": url,
+            "trophy_page": trophy_url,
+            "uid": uid,
+            "passport_badge": passport_badge,
+            "attraction_expert_badge": attraction_expert_badge
         }
 
     def extract_reviews(self, attraction, url, traveller_type):
@@ -113,7 +132,7 @@ class Scraper:
                     more_links = driver.find_elements_by_css_selector('div.review-container .partial_entry span.taLnk.ulBlueLinks')
                     if len(more_links) == 0: break
                     for link in more_links:
-                        sleep(0.8)
+                        sleep(0.2)
                         try:
                             link.click()
                         except:
@@ -152,7 +171,7 @@ class Scraper:
                     no_more_pages = True 
 
                 if(no_more_pages): break
-                sleep(1.5)
+                sleep(2)
 
         except Exception as err:
             print("Error: " + err)
