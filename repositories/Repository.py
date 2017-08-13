@@ -46,7 +46,10 @@ class Repository:
         self.__write('analysis', data)
         
     # Readers
-        
+    
+    def read_raw_reviews(self, query={}, projection=None):
+        return self.__read('raw_reviews', query, projection)
+
     def read_raw_reviews_singapore_zoo(self, query={}, projection=None):
         return self.__read('raw_reviews_singapore_zoo', query, projection)
 
