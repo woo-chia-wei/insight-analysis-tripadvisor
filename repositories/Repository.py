@@ -6,9 +6,9 @@ class Repository:
         self.client = MongoClient('localhost', 27017)
         self.db = self.client['tripadvisor']
     
-    def __write(self, collection_name, data):
+    def __write(self, collection_name, data, append=False):
         collection = self.db[collection_name]
-        collection.delete_many({})
+        if not append: collection.delete_many({})
         is_array = isinstance(data, list)
         if(is_array):
             collection.insert_many(data)
@@ -111,3 +111,8 @@ class Repository:
 
     def read_raw_reviews_singapore_zoo_friends(self, query={}, projection=None):
         return self.__read('raw_reviews_singapore_zoo_friends', query, projection)
+
+    def append_raw_users(self, data):
+        self.__write('raw_users', data, append=True)
+
+
