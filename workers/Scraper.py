@@ -59,27 +59,32 @@ class Scraper:
                     review_5x,
                     "https://www.tripadvisor.com.sg" + url)
 
-        (visited_cities, helpful_votes, review_1x, review_2x, review_3x, review_4x, review_5x, url) = get_member_overlay(uid)
-        soup = self.get_soup(url)
+        try:
+            err = None
+            (visited_cities, helpful_votes, review_1x, review_2x, review_3x, review_4x, review_5x, url) = get_member_overlay(uid)
+            soup = self.get_soup(url)
 
-        print("Extracting profile (" + str(index + 1) + "/" + str(total) + ") from " + url)
+            print("Extracting profile (" + str(index + 1) + "/" + str(total) + ") from " + url + " with uid " + uid)
+            
+            trophy_url = "https://www.tripadvisor.com.sg" + soup.select_one(".trophyCase")['href']
+            trophy_soup = self.get_soup(trophy_url)
+            selector_user_contribution = soup.find('div',{'class':'level tripcollectiveinfo'})
 
-        trophy_url = "https://www.tripadvisor.com.sg" + soup.select_one(".trophyCase")['href']
-        trophy_soup = self.get_soup(trophy_url)
-        selector_user_contribution = soup.find('div',{'class':'level tripcollectiveinfo'})
-
-        username = soup.find('span', {'class': 'nameText'}).get_text().strip()
-        hometown = soup.find('div', {'class': 'hometown'}).get_text().strip()
-        age_since = soup.select_one('.ageSince .since').get_text().strip()
-        short_desc = soup.select('.ageSince p')[1].get_text().strip() if len(soup.select('.ageSince p')) >= 2 else ""
-        no_reviews = int(soup.find('a', {'name': 'reviews'}).get_text().replace('Reviews', '').replace('Review', ''))
-        travel_style = get_travel_style(soup)
-        passport_badge = get_passport_badge(trophy_soup)
-        attraction_expert_badge = get_attraction_expert_badge(trophy_soup)
+            username = soup.find('span', {'class': 'nameText'}).get_text().strip()
+            hometown = soup.find('div', {'class': 'hometown'}).get_text().strip()
+            age_since = soup.select_one('.ageSince .since').get_text().strip()
+            short_desc = soup.select('.ageSince p')[1].get_text().strip() if len(soup.select('.ageSince p')) >= 2 else ""
+            no_reviews = int(soup.find('a', {'name': 'reviews'}).get_text().replace('Reviews', '').replace('Review', ''))
+            travel_style = get_travel_style(soup)
+            passport_badge = get_passport_badge(trophy_soup)
+            attraction_expert_badge = get_attraction_expert_badge(trophy_soup)
+            
+            user_contribution = int(selector_user_contribution.find('span').get_text()) if selector_user_contribution else ""
         
-        user_contribution = int(selector_user_contribution.find('span').get_text()) if selector_user_contribution else ""
+        except:
+            err = "Error found when try to extract information for user with uid " + uid
         
-        return {
+        data = {
             "username": username,
             "hometown": hometown,
             "age_since": age_since,
@@ -100,6 +105,8 @@ class Scraper:
             "passport_badge": passport_badge,
             "attraction_expert_badge": attraction_expert_badge
         }
+
+        return (data, err)
 
     def extract_reviews(self, attraction, url, traveller_type):
 

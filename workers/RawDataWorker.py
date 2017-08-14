@@ -3,6 +3,7 @@ from workers.Scraper import Scraper
 from workers.StopWatch import stop_watch
 import re as regex
 import json
+import pprint as pp
 
 class RawDataWorker:
 
@@ -70,14 +71,25 @@ class RawDataWorker:
             return list(uids_set)
         
         data = []
+        errors = []
         uids = read_user_id_from_raw_reviews()
         total = len(uids)
         for index, uid in enumerate(uids):
-            data.append(self.scraper.extract_user(uid, index, total))
+            result, err = self.scraper.extract_user(uid, index, total)
+            if err:
+                errors.append(err)
+                print(err)
+            else:
+                data.append(result)
 
         if(len(data) != 0):
             self.repo.write_raw_users(data)
             print(str(len(data)) + " data is being imported to mongodb db 'raw_users'.")
+
+            if len(errors) > 0:
+                print("Error logs are shown below: ")
+                pp.pprint(errors)
+
         else:
             print("No data is being imported. There might be error during the web scraping.")
 
