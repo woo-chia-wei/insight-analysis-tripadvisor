@@ -12,4 +12,5 @@ repo = Repository()
 # json.dump(json_util.dumps(repo.read_raw_reviews_river_safari()), open("raw_data_backups/raw_reviews_river_safari.json", "w"))
 # json.dump(json_util.dumps(repo.read_raw_reviews_night_safari()), open("raw_data_backups/raw_reviews_night_safari.json", "w"))
 
-json.dump(json_util.dumps(repo.read_raw_reviews()), open("raw_data_backups/raw_reviews.json", "w"))
+# json.dump(json_util.dumps(repo.read_raw_reviews()), open("raw_data_backups/raw_reviews.json", "w"))
+json.dump(json_util.dumps(repo.read_raw_users()), open("raw_data_backups/raw_users.json", "w"))
