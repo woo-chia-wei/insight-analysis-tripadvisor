@@ -18,13 +18,13 @@ class Patch():
         # repo.write_raw_reviews_singapore_zoo_business(scraper.extract_reviews("Singapore Zoo", url, "Business")) # Done
         # repo.write_raw_reviews_singapore_zoo_friends(scraper.extract_reviews("Singapore Zoo", url, "Friends"))
 
-        # data = []
-        # data += repo.read_raw_reviews_singapore_zoo_families()
-        # data += repo.read_raw_reviews_singapore_zoo_couples()
-        # data += repo.read_raw_reviews_singapore_zoo_solo()
-        # data += repo.read_raw_reviews_singapore_zoo_business()
-        # data += repo.read_raw_reviews_singapore_zoo_friends()
-        # repo.write_raw_reviews_all_attractions(data)
+        data = []
+        data += repo.read_raw_reviews_singapore_zoo_families()
+        data += repo.read_raw_reviews_singapore_zoo_couples()
+        data += repo.read_raw_reviews_singapore_zoo_solo()
+        data += repo.read_raw_reviews_singapore_zoo_business()
+        data += repo.read_raw_reviews_singapore_zoo_friends()
+        repo.write_raw_reviews_singapore_zoo(data)
 
 Patch().run_patch()
 
