@@ -70,21 +70,32 @@ class RawDataWorker:
             uids_set = set(uids)
             return list(uids_set)
         
+        def read_user_id_from_existing_raw_reviews():
+            repo = Repository()
+            records = []
+            records += repo.read_raw_users()
+            return [data["uid"] for data in records]
+
         data = []
         errors = []
         uids = read_user_id_from_raw_reviews()
-        total = len(uids)
-        for index, uid in enumerate(uids):
+        existing_uids = read_user_id_from_existing_raw_reviews()
+        print(f"# uids = {len(uids)}")
+        print(f"# existing_uids = {len(existing_uids)}")
+
+        new_uids = [uid for uid in uids if uid not in existing_uids]
+        total = len(new_uids)
+        for index, uid in enumerate(new_uids):
             result, err = self.scraper.extract_user(uid, index, total)
             if err:
                 errors.append(err)
                 print(err)
             else:
+                self.repo.append_raw_users(result)
                 data.append(result)
 
         if(len(data) != 0):
-            self.repo.write_raw_users(data)
-            print(str(len(data)) + " data is being imported to mongodb db 'raw_users'.")
+            print(str(len(data)) + " data is being appended to mongodb db 'raw_users'.")
 
             if len(errors) > 0:
                 print("Error logs are shown below: ")
