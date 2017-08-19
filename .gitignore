@@ -6,3 +6,4 @@ test.py
 raw_data_backups
 mongodb_backups
 *.xlsx
+.vscode

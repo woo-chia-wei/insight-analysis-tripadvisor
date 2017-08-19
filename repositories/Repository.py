@@ -42,8 +42,8 @@ class Repository:
     def write_processed_users(self, data):
         self.__write('processed_users', data)  
     
-    def write_analysis(self, data):
-        self.__write('analysis', data)
+    def write_analysis_reviews(self, data):
+        self.__write('analysis_reviews', data)
         
     # Readers
     
@@ -68,8 +68,8 @@ class Repository:
     def read_processed_users(self, query={}, projection=None):
         return self.__read('processed_users', query, projection)
     
-    def read_analysis(self, query={}, projection=None):
-        return self.__read('analysis', query, projection)
+    def read_analysis_reviews(self, query={}, projection=None):
+        return self.__read('analysis_reviews', query, projection)
 
     # Data Patching
 
