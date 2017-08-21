@@ -13,24 +13,43 @@ actions = {
     "5": {"name": "Merge raw reviews from all attractions into single raw reviews.", "execute": "process_data_worker.merge_all_attractions()"},
     "6": {"name": "Process final raw reviews and copy to processed reviews.", "execute": "process_data_worker.process_raw_reviews()"},
     "7": {"name": "Process final raw users and copy to processed users.", "execute": "process_data_worker.process_user_reviews()"},
-    "8": {"name": "Process final raw users and copy to processed users.", "execute": "data_analysis_worker.run_analysis()"},
+    "8": {"name": "Run sentiment analysis and topic modelling", "execute": "data_analysis_worker.run_analysis()"},
     "Q": {"name": "Exit program.", "execute":"print('Exited program.')"}
 }
 
-# Console Interface
-# User can selection action to perform
+def print_action(choice):
+    print(choice + ". " + actions[choice]['name'])
 
+# Console Line Interface
+print()
 print("##############################################")
-print("###     WildLife Reserves Web Scraping     ###")
+print("#       WildLife Reserves Web Scraping       #")
 print("##############################################")
-for action_key, action_item in actions.items():
-    print(action_key + ". " + action_item['name'])
-
+print()
+print("Raw Data Extraction")
+print("------------------------------------")
+print_action("1")
+print_action("2")
+print_action("3")
+print_action("4")
+print()
+print("Data Pre-processing")
+print("------------------------------------")
+print_action("5")
+print_action("6")
+print_action("7")
+print()
+print("Perform text analytics")
+print("------------------------------------")
+print_action("8")
+print()
+print_action("Q")
+print()
 choice = input("Please enter your choice. ").upper()
 
 if choice not in actions:
     print("'" + choice + "' is invalid choice.")
 else:
-    print("==============================================")
+    print()
     eval(actions[choice]['execute'])
 
