@@ -1,8 +1,10 @@
 from workers.RawDataWorker import RawDataWorker
 from workers.ProcessDataWorker import ProcessDataWorker
+from workers.DataAnalysisWorker import DataAnalysisWorker
 
 raw_data_worker = RawDataWorker()
 process_data_worker = ProcessDataWorker()
+data_analysis_worker = DataAnalysisWorker()
 actions = {
     "1": {"name": "Get raw reviews from Singapore Zoo.", "execute": "raw_data_worker.extract_raw_reviews_singapore_zoo()"},
     "2": {"name": "Get raw reviews from River Safari.", "execute": "raw_data_worker.extract_raw_reviews_river_safari()"},
@@ -11,6 +13,7 @@ actions = {
     "5": {"name": "Merge raw reviews from all attractions into single raw reviews.", "execute": "process_data_worker.merge_all_attractions()"},
     "6": {"name": "Process final raw reviews and copy to processed reviews.", "execute": "process_data_worker.process_raw_reviews()"},
     "7": {"name": "Process final raw users and copy to processed users.", "execute": "process_data_worker.process_user_reviews()"},
+    "8": {"name": "Process final raw users and copy to processed users.", "execute": "data_analysis_worker.run_analysis()"},
     "Q": {"name": "Exit program.", "execute":"print('Exited program.')"}
 }
 
