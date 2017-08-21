@@ -4,7 +4,6 @@ __pycache__
 debug.log
 test.py
 raw_data_backups
-mongodb_backups
 *.xlsx
 .vscode
 *.ipynb

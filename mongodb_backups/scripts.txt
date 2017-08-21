@@ -1,0 +1,5 @@
+//Backup command
+mongodump --collection raw_reviews_singapore_ --db tripadvisor --out <path>
+
+//Restore command
+mongorestore --collection analysis_reviews --db tripadvisor <bson path>

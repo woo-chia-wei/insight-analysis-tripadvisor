@@ -8,6 +8,7 @@ class DataAnalysisWorker:
     def __init__(self):
         self.repo = Repository()
     
+    @stop_watch
     def run_analysis(self):
         print("run_analysis")
 
