@@ -23,7 +23,7 @@ def print_action(choice):
 # Console Line Interface
 print()
 print("##############################################")
-print("#       WildLife Reserves Web Scraping       #")
+print("#    Singapore WildLife Reserves Analysis    #")
 print("##############################################")
 print()
 print("Raw Data Extraction")
