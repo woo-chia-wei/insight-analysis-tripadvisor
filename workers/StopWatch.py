@@ -1,6 +1,7 @@
 from time import time
+from datetime import datetime
 
-def stop_watch(f):
+def stop_watch(func):
     def convert_seconds(seconds):
         seconds = int(seconds)
         minutes = int(seconds / 60)
@@ -19,10 +20,10 @@ def stop_watch(f):
         return "Total elapsed time is " + body + "."
 
     def stop_watch_decoractor(self):
-        print("Start stopwatch for '" + f.__name__ + "' ...")
+        print("Start stopwatch for '" + func.__name__ + "' ... at " + str(datetime.now()))
         start_time = time()
-        f(self)
-        print("Stopping stopwatch for '" + f.__name__+ "' ...")
+        func(self)
+        print("Stopping stopwatch for '" + func.__name__+ "' ... at " + str(datetime.now()))
         print(convert_seconds(time() - start_time))
 
     return stop_watch_decoractor

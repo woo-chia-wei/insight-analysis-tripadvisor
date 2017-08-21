@@ -13,7 +13,7 @@ actions = {
     "5": {"name": "Merge raw reviews from all attractions into single raw reviews.", "execute": "process_data_worker.merge_all_attractions()"},
     "6": {"name": "Process final raw reviews and copy to processed reviews.", "execute": "process_data_worker.process_raw_reviews()"},
     "7": {"name": "Process final raw users and copy to processed users.", "execute": "process_data_worker.process_user_reviews()"},
-    "8": {"name": "Run sentiment analysis and topic modelling", "execute": "data_analysis_worker.run_analysis()"},
+    "8": {"name": "Run sentiment analysis and topic modelling.", "execute": "data_analysis_worker.run_analysis()"},
     "Q": {"name": "Exit program.", "execute":"print('Exited program.')"}
 }
 
