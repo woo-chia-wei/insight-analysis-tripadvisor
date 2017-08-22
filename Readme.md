@@ -10,6 +10,6 @@ Simply run "python main.py" or "python -W ignore main.py" to suppress warning me
 Below is screenshot of CLI screen:
 
 <p align="center"> 
-  <img src="https://github.com/woo-chia-wei/insight-analysis-tripadvisor/blob/master/images/public/tripadvisor_ca_cli.png" 
+  <img src="https://github.com/woo-chia-wei/insight-analysis-tripadvisor/blob/master/images/readme/tripadvisor_ca_cli.png" 
        width="50%" height="50%">
 </p>

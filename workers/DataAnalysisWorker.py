@@ -173,7 +173,7 @@ class DataAnalysisWorker:
             tf_list = []
             for corpus_data in corpus_processed:
                 tf_list.append(tfidf[dictionary.doc2bow(corpus_data)])
-            ldamodel = models.ldamodel.LdaModel(tf_list, num_topics=10, id2word = dictionary, passes=100,minimum_probability=0.05)
+            ldamodel = models.ldamodel.LdaModel(tf_list, num_topics=10, id2word = dictionary,passes=1)
             model_filename=''
             if attraction_v == 'Singapore Zoo':
                 model_filename='zoo_mongo.model'
@@ -190,4 +190,3 @@ class DataAnalysisWorker:
         # Write Text Analytics Results to MongoDB
         print("Write Text Analytics Results to MongoDB")
         self.__write_analysis_2_db(final_result)
-
