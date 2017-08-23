@@ -1,6 +1,13 @@
 # What is this?
 Extract user reviews/ user profiles from tripadvisor and apply machine learning techniques to perform Descriptive, Predictive & Prescriptive  Analytics.
 
+# Architecture Design
+
+<p align="center"> 
+  <img src="https://github.com/woo-chia-wei/insight-analysis-tripadvisor/blob/master/images/readme/framework_architecture.png" 
+       width="50%" height="50%">
+</p>
+
 # Instruction
 Simply run "python main.py" or "python -W ignore main.py" to suppress warning message in terminal. A command line interface will be displayed, user has  toinsert choice to perform action. Actions are basically grouped as:
 1. Extraction (Web scraping using BeautifulSoup/ Selenium ChromeDriver)
